@@ -1,0 +1,167 @@
+<!--
+Reference for time calculations: https://minecraft.gamepedia.com/Day-night_cycle
+Reference for distance: https://minecraft.gamepedia.com/Coordinates
+Reference for speed: https://minecraft.gamepedia.com/Transportation
+Reference for bearings: http://mathforum.org/library/drmath/view/62034.html
+
+                     North -Z
+                       .
+                       .
+                       .
+                       .
+                       .
+West -X .  .  .  .  .  +  .  .  .  .  . East +X
+                       .
+                       .
+                       .
+                       .
+                       .
+                    South +Z
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minecraft Distance Calculator</title>
+</head>
+<body>
+<h1>Minecraft Distance Calculator</h1>
+<div>
+    <form id="distance" action="#" method="get" onsubmit="CalculateDistance()">
+        <table>
+            <tr>
+                <td>&nbsp;</td>
+                <th>X</th>
+                <th>Y</th>
+                <th>Z</th>
+            </tr>
+            <tr>
+                <td>From:</td>
+                <td><input id="from_X" type="text" size="5" maxlength="5" value="0"/></td>
+                <td><input id="from_Y" type="text" size="5" maxlength="5" value="0"/></td>
+                <td><input id="from_Z" type="text" size="5" maxlength="5" value="0"/></td>
+            </tr>
+            <tr>
+                <td>To:</td>
+                <td><input id="to_X" type="text" size="5" maxlength="5" value=""/></td>
+                <td><input id="to_Y" type="text" size="5" maxlength="5" value=""/></td>
+                <td><input id="to_Z" type="text" size="5" maxlength="5" value=""/></td>
+            </tr>
+            <tr>
+                <td colspan="4"><input type="submit" value="Calculate"></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="result">
+    <hr/>
+    <h1>Result</h1>
+    <table>
+        <tr>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr>
+            <td>Horizontal Distance (m):</td>
+            <td id="h_distance"></td>
+        </tr>
+        <tr>
+            <td>Vertical Distance (m):</td>
+            <td id="v_distance"></td>
+        </tr>
+        <tr>
+            <td>Crow fly distance:</td>
+            <td id="crow_distance"></td>
+        </tr>
+        <tr>
+            <td>Bearing Degrees:</td>
+            <td id="bearing_deg"></td>
+        </tr>
+        <tr>
+            <td>Real Time Walking:</td>
+            <td id="real_time_walking"></td>
+        </tr>
+        <tr>
+            <td>Game Time Walking:</td>
+            <td id="game_time_walking"></td>
+        </tr>
+    </table>
+</div>
+<script lang="js">
+    function CalculateDistance() {
+        var from_X = document.getElementById('from_X').value;
+        var to_X = document.getElementById('to_X').value;
+        var x_distance = from_X - to_X;
+
+        var from_Y = document.getElementById('from_Y').value;
+        var to_Y = document.getElementById('to_Y').value;
+        var y_distance = from_Y - to_Y;
+
+        var from_Z = document.getElementById('from_Z').value;
+        var to_Z = document.getElementById('to_Z').value;
+        var z_distance = from_Z - to_Z;
+
+        var h_distance = Math.sqrt(Math.pow(x_distance, 2) + Math.pow(z_distance, 2));
+        var v_distance = from_Y - to_Y;
+        var crow_distance = Math.sqrt(
+            Math.pow(x_distance, 2) + Math.pow(y_distance, 2) + Math.pow(z_distance, 2)
+        );
+
+        document.getElementById('h_distance').innerHTML = h_distance.toFixed(1);
+        document.getElementById('v_distance').innerHTML = v_distance;
+        document.getElementById('crow_distance').innerHTML = crow_distance.toFixed(1);
+
+        // Calculate bearing - use trick to move from to 0,0
+        var adjusted_x = to_X - from_X;
+        var adjusted_z = to_Z - from_Z;
+        // Because Z (aka Y) is the wrong way around - swap it
+        adjusted_z *= -1;
+
+        var foo = Math.atan2(adjusted_z, adjusted_x);
+        var bar = (180 / Math.PI) * foo;
+        var bearing_deg = 90 - (180/Math.PI) * Math.atan2(adjusted_z, adjusted_x);
+        if(bearing_deg < 0)
+        {
+            bearing_deg += 360;
+        }
+        document.getElementById('bearing_deg').innerHTML = ConvertDegToCompassRose(bearing_deg) + " [" + bearing_deg.toFixed(2) + "]";
+
+        const average_walking_speed = 4.3;
+        var seconds_taken = h_distance / average_walking_speed;
+
+        // Real world time calculation approximation
+        var temp = seconds_taken;
+        var hours = Math.floor(temp / 3600);
+        temp %= 3600;
+        var minutes = Math.floor(temp / 60);
+        temp %= 60;
+        document.getElementById('real_time_walking').innerHTML = hours.toString().padStart(3,'0')
+            + ' hr ' + minutes.toString().padStart(2,'0')
+            + ' min ' + temp.toFixed(2).toString().padStart(5,'0') + 's';
+
+        // Game time approximation
+        temp = seconds_taken * 72;
+        var hours = Math.floor(temp / 3600);
+        temp %= 3600;
+        var minutes = Math.floor(temp / 60);
+        temp %= 60;
+        document.getElementById('game_time_walking').innerHTML = hours.toString().padStart(3,'0')
+            + ' hr ' + minutes.toString().padStart(2,'0')
+            + ' min ' + temp.toFixed(2).toString().padStart(5,'0') + 's';
+
+        //alert(h_distance);
+    }
+
+    function ConvertDegToCompassRose(degrees) {
+        var rose=["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+        var index = Math.round(degrees / 22.5);
+        if(index > 15)
+        {
+            index = 0;
+        }
+        return rose[index];
+    }
+
+</script>
+</body>
+</html>
