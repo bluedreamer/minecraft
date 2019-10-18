@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Spawn",
+    "type": "Spawn Point",
+    "location", {"X": 240, "Y": 70, "Z": -160}
+  },
+  {
+    "name":  "Home",
+    "type": "house",
+    "location": {"X": 272, "Y":68, "Z": -160}
+  }
+]
