@@ -1,2 +1,6 @@
 .idea
 cmake-build-debug
+.*.swp
+*.o
+bin/
+ade.txt

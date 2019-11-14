@@ -22,16 +22,4 @@ Reader::Reader(const std::string &filename)
 
    Tag t;
    uncompressed_stream >> t;
-
-   std::cout << "Dump\n" << t << std::endl;
-   // TODO better exception here
-//   if(!stream_)
-//   {
-//      std::string msg("Unable to open file: [");
-//      msg+=filename;
-//      msg+="]";
-//      throw std::system_error(errno, msg);
-//   }
-
-
 }
