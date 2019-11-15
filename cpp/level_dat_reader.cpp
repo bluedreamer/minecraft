@@ -8,13 +8,26 @@ int main(int argc, char* argv[])
 {
    try
    {
-      std::vector<std::string> level_files={
-         "../cpp/save_files/example_files/level_1.dat",
-         "../cpp/save_files/example_files/level_2.dat",
-         "../cpp/save_files/example_files/level_3.dat",
-         "../cpp/save_files/example_files/level_4.dat",
-         "../cpp/save_files/example_files/level_5.dat",
-         "../cpp/save_files/example_files/level_6.dat"};
+      std::vector<std::string> level_files;
+
+      if(argc==1)
+      {
+         level_files={
+            "../cpp/save_files/example_files/level_1.dat",
+//         "../cpp/save_files/example_files/level_2.dat",
+//         "../cpp/save_files/example_files/level_3.dat",
+//         "../cpp/save_files/example_files/level_4.dat",
+//         "../cpp/save_files/example_files/level_5.dat",
+//         "../cpp/save_files/example_files/level_6.dat",
+         };
+      }
+      else
+      {
+         for(int i=1; i<argc; ++i)
+         {
+            level_files.emplace_back(argv[i]);
+         }
+      }
       for(const auto &filename : level_files)
       {
          std::cout << "READING: " << filename << std::endl;

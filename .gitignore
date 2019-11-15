@@ -1,6 +1,6 @@
 .idea
 cmake-build-debug
 .*.swp
-*.o
+*.[ado]
 bin/
 ade.txt

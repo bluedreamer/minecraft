@@ -33,6 +33,13 @@ public:
    tag_e GetType() const;
    void SetType(tag_e type);
    static size_t GetPayloadSizeInBytes(tag_e type);
+   const Tag &FindChildTag(const std::string &name) const;
+   bool IsNamed(const std::string &name) const;
+
+   bool AsBool() const;
+   int32_t AsInt32() const;
+   int64_t AsInt64() const;
+   double AsDouble() const;
 private:
    void read(std::istream &in);
    void print(std::ostream &os) const;
@@ -41,8 +48,8 @@ private:
    void get_tag_body(std::istream &in);
    void get_list_tag_data(std::istream &in);
 
-   tag_e type_;
-   std::optional<std::string> name_;
+   tag_e type_{tag_e::END};
+   std::optional<std::string> name_{};
    using list_variant=std::variant<
       std::monostate,
       std::list<int8_t>,
@@ -69,7 +76,7 @@ private:
       std::vector<Tag>, // 10
       std::vector<int32_t>, // 11
       std::vector<int64_t> // 12
-   > data_;
+   > data_{};
 };
 
 const char *enum_to_string(Tag::tag_e e);

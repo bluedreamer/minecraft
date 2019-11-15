@@ -2,11 +2,9 @@
 #include <iostream>
 
 #include <boost/iostreams/filtering_streambuf.hpp>
-#include <boost/iostreams/copy.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
 
 #include "Reader.h"
-#include "Tag.h"
 
 Reader::Reader(const std::string &filename)
    :stream_(filename.c_str(), std::ios_base::in | std::ios_base::binary)
@@ -18,8 +16,11 @@ Reader::Reader(const std::string &filename)
    in.push(stream_);
 
    std::istream uncompressed_stream(&in);
-   //boost::iostreams::copy(in, std::cout);
-
-   Tag t;
-   uncompressed_stream >> t;
+   uncompressed_stream >> root_tag_;
 }
+
+const Tag &Reader::GetRoot() const
+{
+   return root_tag_;
+}
+

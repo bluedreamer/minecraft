@@ -473,3 +473,47 @@ void Tag::get_list_tag_data(std::istream &in)
    }
    indent.erase(indent.length()-1, 1);
 }
+
+const Tag &Tag::FindChildTag(const std::string &name) const
+{
+   if(data_.index() == static_cast<size_t>(Tag::tag_e::COMPOUND))
+   {
+      for(const auto &child_tag : std::get<10>(data_))
+      {
+         if(child_tag.IsNamed(name))
+         {
+            return child_tag;
+         }
+      }
+   }
+   throw std::logic_error("Child tag not found: " + name);
+}
+
+bool Tag::IsNamed(const std::string &name) const
+{
+   if(name_.has_value() && name_ == name)
+   {
+      return true;
+   }
+   return false;
+}
+
+bool Tag::AsBool() const
+{
+   return std::get<int8_t>(data_);
+}
+
+int64_t Tag::AsInt64() const
+{
+   return std::get<int64_t>(data_);
+}
+
+double Tag::AsDouble() const
+{
+   return std::get<double>(data_);
+}
+
+int32_t Tag::AsInt32() const
+{
+   return std::get<int32_t>(data_);
+}
