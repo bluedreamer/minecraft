@@ -23,7 +23,7 @@ Level create_level_file(const Reader &reader)
       level.SetBorderWarningTime(data_tag.FindChildTag("BorderWarningTime").AsDouble());
       level.SetClearWeatherTime(data_tag.FindChildTag("clearWeatherTime").AsInt32());
       //TODO Need to do customboss events but no data in level.dat example so leaving it
-      
+
 
    }
    catch(const std::exception &e)
